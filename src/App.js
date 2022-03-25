@@ -4,13 +4,16 @@ import DiseasesProvider from "./store/DiseasesProvider";
 import PageHeader from "./components/PageHeader";
 
 import "./App.css";
+import UserProvider from "./store/UserProvider";
 
 function App() {
   return (
     <DiseasesProvider>
-      <div>
-        <PageHeader />
-      </div>
+      <UserProvider>
+        <div>
+          <PageHeader />
+        </div>
+      </UserProvider>
     </DiseasesProvider>
   );
 }

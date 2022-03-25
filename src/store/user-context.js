@@ -2,7 +2,7 @@ import React from 'react';
 
 const UserContext = React.createContext({
 
-    diseaseSelected: 0, 
+    diseaseSelected: null, 
     team: [],
     notes: [],
     appointments: [],

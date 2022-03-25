@@ -1,15 +1,38 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import { Container, Row, Col, Button, ListGroup } from "react-bootstrap";
+
 import DiseasesContext from "../store/diseases-context";
+import UserContext from '../store/user-context';
+
+
+let confirmMessage = '';
 
 const Welcome = () => {
-  
-  const diseases = useContext(DiseasesContext);
-  
+  const [showConfirmMessage, setShowConfirmMessage] = useState(false);
+  const diseases = useContext(DiseasesContext); 
+  const userCtx = useContext(UserContext);
+
+  const history = useHistory();
+
   const diseaseClicked = (value) => {
-    console.dir(value);
+    userCtx.selectDisease(value);
+    confirmMessage = (
+      <Row>
+        <Col>
+          <p>{diseases[value].confirmMessage}</p>
+        </Col>
+      </Row>
+    );
+
+    console.log('Disease selected');
+    setShowConfirmMessage(true);
   };
+
+  const weiterButtonClicked = () => {
+    history.push('/team-intro');
+  }
 
   return (
     <div className="content">
@@ -25,7 +48,7 @@ const Welcome = () => {
             zusammenstellen?
           </p>
           <ListGroup>
-            {diseases.map((disease, index) => {             
+            {diseases.map((disease, index) => {
               return (
                 <ListGroup.Item
                   disabled={disease.disabled}
@@ -41,8 +64,9 @@ const Welcome = () => {
           </ListGroup>
         </Row>
         <br></br>
+        {showConfirmMessage ? confirmMessage: <p></p>}
         <Row>
-          <Button>Weiter</Button>
+          <Button onClick={() => weiterButtonClicked()} disabled={!showConfirmMessage}>Weiter</Button>
         </Row>
       </Container>
     </div>

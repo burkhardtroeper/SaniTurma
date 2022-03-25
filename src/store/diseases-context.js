@@ -4,7 +4,11 @@ const DiseasesContext = React.createContext({
 
     key: 0, 
     name: '',
-    disabled: true
+    questions: [],
+    description: '',
+    disabled: true,
+    healthTeam: [],
+    confirmMessage: '',
 
 });
 
