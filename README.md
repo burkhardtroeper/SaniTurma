@@ -6,6 +6,6 @@ My first React-Project. Work in progress.
 
 At this stage no user-data is saved for long-storage. In future versions user-data will be local-storaged on device.
 
-Health-Team-data is hard-coded for now. Will come from a cloud-service in future services.
+Health-Team-data is hard-coded for now. Will come from a cloud-service in future versions.
 
 App is in german language.
