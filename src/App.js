@@ -5,16 +5,19 @@ import PageHeader from "./components/PageHeader";
 
 import "./App.css";
 import UserProvider from "./store/UserProvider";
+import HealthTeamProvider from "./store/HealthTeamProvider";
 
 function App() {
   return (
-    <DiseasesProvider>
-      <UserProvider>
-        <div>
-          <PageHeader />
-        </div>
-      </UserProvider>
-    </DiseasesProvider>
+    <HealthTeamProvider>
+      <DiseasesProvider>
+        <UserProvider>
+          <div>
+            <PageHeader />
+          </div>
+        </UserProvider>
+      </DiseasesProvider>
+    </HealthTeamProvider>
   );
 }
 

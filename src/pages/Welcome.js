@@ -5,23 +5,29 @@ import { Container, Row, Col, Button, ListGroup } from "react-bootstrap";
 
 import DiseasesContext from "../store/diseases-context";
 import UserContext from '../store/user-context';
+import HealthTeamContext from "../store/healthteam-context";
 
 
 let confirmMessage = '';
 
 const Welcome = () => {
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
-  const diseases = useContext(DiseasesContext); 
+  const diseaseCtx = useContext(DiseasesContext); 
   const userCtx = useContext(UserContext);
+  const healthTeamCtx = useContext(HealthTeamContext);
 
   const history = useHistory();
 
   const diseaseClicked = (value) => {
-    userCtx.selectDisease(value);
+    
+    userCtx.selectDisease(value);    
+    const disease = diseaseCtx[userCtx.diseaseSelected].name
+    healthTeamCtx.getTeamByDisease(disease);
+
     confirmMessage = (
       <Row>
         <Col>
-          <p>{diseases[value].confirmMessage}</p>
+          <p>{diseaseCtx[value].confirmMessage}</p>
         </Col>
       </Row>
     );
@@ -31,6 +37,7 @@ const Welcome = () => {
   };
 
   const weiterButtonClicked = () => {
+
     history.push('/team-intro');
   }
 
@@ -48,7 +55,7 @@ const Welcome = () => {
             zusammenstellen?
           </p>
           <ListGroup>
-            {diseases.map((disease, index) => {
+            {diseaseCtx.map((disease, index) => {
               return (
                 <ListGroup.Item
                   disabled={disease.disabled}

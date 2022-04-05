@@ -1,4 +1,4 @@
-import { useReducer, useContext } from "react";
+import { useReducer } from "react";
 import UserContext from "./user-context";
 // import DiseasesContext from "../store/diseases-context";
 import HealthTeamContext from "./healthteam-context";

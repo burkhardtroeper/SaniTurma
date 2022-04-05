@@ -3,12 +3,8 @@ import React from 'react';
 const HealthTeamContext = React.createContext({
 
     healthWorkers: [],
-    teamMembers: [],
     getTeamByDisease: (disease) => {},
-    getTeamMember: (id) => {},
-    addTeamMember: (id) => {},
-    removeTeamMember: (id) => {},
-
+    
 });
 
 export default HealthTeamContext;

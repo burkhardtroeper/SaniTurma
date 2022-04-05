@@ -36,3 +36,24 @@
     transform: rotate(360deg);
   }
 }
+
+.leaflet-container {
+  width: 100vw;
+  height: 95vh;
+}
+
+.map-page-menu-button {
+  position: fixed;
+  left: 50%;
+  top: 95%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.map-page-toast {
+  position: fixed;
+  left: 50%;
+  top: 87%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
