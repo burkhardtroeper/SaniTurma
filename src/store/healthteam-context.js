@@ -3,7 +3,9 @@ import React from 'react';
 const HealthTeamContext = React.createContext({
 
     healthWorkers: [],
+    teamTypes: [],
     getTeamByDisease: (disease) => {},
+    getTeamTypes: (disease) => {}
     
 });
 

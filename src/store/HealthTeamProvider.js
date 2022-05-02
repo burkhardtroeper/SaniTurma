@@ -53,7 +53,8 @@ const healthWorkers = [
 ]; 
 
 const defaultHealthTeamState = {
-    healthWorkers: []
+    healthWorkers: [],
+    teamTypes: []
 };
 
 const healthTeamReducer = (state, action) => {
@@ -68,8 +69,28 @@ const healthTeamReducer = (state, action) => {
 
         return {            
             healthWorkers: updatedHealthWorkers,
-            teamMembers: state.teamMembers
+            teamTypes: state.teamTypes
         }
+
+    }
+
+    if (action.type === 'GETTEAMTYPES') {
+        console.log('in HealthTeamProvider, getTeamTypes');
+        console.log('Disease: ' + action.disease);
+
+        let teamSpecialities = [];
+
+        healthWorkers.filter((healthWorker) => {
+            if (!teamSpecialities.includes(healthWorker.specialist)) {teamSpecialities.push(healthWorker.specialist)};
+        });
+
+        console.log('Updated TeamTypes: ' + teamSpecialities.length);
+
+        return {
+            healthWorkers: state.healthWorkers,
+            teamTypes: teamSpecialities
+        }
+
     }
 
     return defaultHealthTeamState;
@@ -84,11 +105,17 @@ const HealthTeamProvider = (props) => {
     const getTeamByDiseaseHandler = (disease) => {
         dispatchHealthTeamAction({type: 'GETTEAMBYDISEASE', disease: disease});
     }    
+
+    const getTeamTypes = (disease) => {
+        dispatchHealthTeamAction({type: 'GETTEAMTYPES', disease: disease});
+    }
     
     const healthTeamContext = {
 
         healthWorkers: healthTeamState.healthWorkers,
+        teamTypes: healthTeamState.teamTypes,
         getTeamByDisease: getTeamByDiseaseHandler,
+        getTeamTypes: getTeamTypes
 
     };
     
