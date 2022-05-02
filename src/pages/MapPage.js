@@ -7,6 +7,10 @@ import HealthTeamContext from "../store/healthteam-context";
 import UserContext from "../store/user-context";
 import DiseasesContext from "../store/diseases-context";
 
+let disease = '';
+let healthTeam = [];
+let teamTypes = [];
+
 const MapPage = () => {
   const diseaseCtx = useContext(DiseasesContext);
   const userCtx = useContext(UserContext);
@@ -15,22 +19,25 @@ const MapPage = () => {
   const [showToast, setShowToast] = useState(false);
 
   const toggleToast = () => {
-    //setShowToast(!showToast);
+    setShowToast(!showToast);
 
-    const disease = diseaseCtx[userCtx.diseaseSelected].name
-    healthTeamCtx.getTeamByDisease(disease);
-    // console.log(updatedHealthTeam);
 
-    //setHealthTeam(healthTeamCtx.getTeamByDisease(disease));
-    //console.log(healthTeam);
+
   };
 
   //setDisease(diseaseCtx[userCtx.diseaseSelected]);
 
-  //   useEffect(() => {
-  //     console.log("Selected Disease in MapPage: " + disease);
-  //     console.log("HealthTeam: " + healthTeam);
-  //   }, [disease, healthTeam]);
+  useEffect(() => {
+
+    disease = diseaseCtx[userCtx.diseaseSelected].name
+    healthTeam = healthTeamCtx.getTeamByDisease(disease);
+    teamTypes = healthTeamCtx.getTeamTypes(disease);
+
+    console.log("Selected Disease in MapPage: " + disease);
+    console.log("HealthTeam: " + healthTeam);
+    console.log('TeamTypes: ' + teamTypes);
+
+  }, []);
 
   const memberPopup = (
     <div>
@@ -44,6 +51,15 @@ const MapPage = () => {
         </Marker>
       ))}
     </div>
+  );
+
+  const teamTypesList = (
+
+    <div>
+      {healthTeamCtx.teamTypes.map(teamType => (
+            <p key={teamType}>{teamType}</p>))}
+    </div>
+
   );
 
   return (
@@ -62,7 +78,9 @@ const MapPage = () => {
         <Toast.Header>
           <strong className="me-auto">Menu</strong>
         </Toast.Header>
-        <Toast.Body>Hello, world! This is a toast message.</Toast.Body>
+        <Toast.Body>
+          {(healthTeamCtx.teamTypes.length !== 0) ? teamTypesList : <p>No Team Types</p>}
+        </Toast.Body>
       </Toast>
 
       <Button className="mb-2 map-page-menu-button" onClick={toggleToast}>
