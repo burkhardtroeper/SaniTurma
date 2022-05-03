@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Toast, Button } from "react-bootstrap";
@@ -7,8 +7,7 @@ import HealthTeamContext from "../store/healthteam-context";
 import UserContext from "../store/user-context";
 import DiseasesContext from "../store/diseases-context";
 
-let disease = '';
-let healthTeam = [];
+let disease = "";
 let teamTypes = [];
 
 const MapPage = () => {
@@ -18,48 +17,77 @@ const MapPage = () => {
 
   const [showToast, setShowToast] = useState(false);
 
+  const [healthTeam, setHealthTeam] = useState(healthTeamCtx.healthWorkers);
+
   const toggleToast = () => {
     setShowToast(!showToast);
-
-
-
   };
 
-  //setDisease(diseaseCtx[userCtx.diseaseSelected]);
-
   useEffect(() => {
-
-    disease = diseaseCtx[userCtx.diseaseSelected].name
-    healthTeam = healthTeamCtx.getTeamByDisease(disease);
-    teamTypes = healthTeamCtx.getTeamTypes(disease);
+    disease = diseaseCtx[userCtx.diseaseSelected].name;
+    healthTeamCtx.getTeamByDisease(disease);
+    healthTeamCtx.getTeamTypes(disease);
+    setHealthTeam(healthTeamCtx.healthWorkers);
 
     console.log("Selected Disease in MapPage: " + disease);
     console.log("HealthTeam: " + healthTeam);
-    console.log('TeamTypes: ' + teamTypes);
-
+    console.log("TeamTypes: " + teamTypes);
   }, []);
+
+  const addTeamMember = (id) => {
+
+    console.log(userCtx.team);
+    console.log('Add Teammember with id ... ' + id);
+    userCtx.addTeamMember(id);
+    console.log(userCtx.team);
+
+  };
+
 
   const memberPopup = (
     <div>
-      {healthTeamCtx.healthWorkers.map((teamMember) => (
+      {healthTeam.map((teamMember) => (       
+
         <Marker key={teamMember.id} position={[teamMember.lat, teamMember.lng]}>
           <Popup>
             {teamMember.name}
             <br />
             {teamMember.specialist}
+            <br />
+            <Button onClick={() => addTeamMember(teamMember.id)}>Auswählen</Button>
           </Popup>
         </Marker>
       ))}
     </div>
   );
 
+  const specialistButtonClicked = (selectedTeamType) => {
+
+    if (selectedTeamType === null) {
+      setHealthTeam(healthTeamCtx.healthWorkers);
+    } else {
+      const updatedHealthTeam = healthTeamCtx.healthWorkers.filter((healthworker) => {
+        return healthworker.specialist === selectedTeamType;  
+      });  
+      setHealthTeam(updatedHealthTeam);
+    }
+
+  };
+
   const teamTypesList = (
-
     <div>
-      {healthTeamCtx.teamTypes.map(teamType => (
-            <p key={teamType}>{teamType}</p>))}
+      {healthTeamCtx.teamTypes.map((teamType, index) => (
+        <div key={teamType}>
+        <Button onClick={() => specialistButtonClicked(teamType)}>
+          {teamType}
+        </Button>
+        <br/>
+        </div>
+      ))}
+      <Button onClick={() => specialistButtonClicked(null)}>
+          Reset
+        </Button>
     </div>
-
   );
 
   return (
@@ -79,7 +107,11 @@ const MapPage = () => {
           <strong className="me-auto">Menu</strong>
         </Toast.Header>
         <Toast.Body>
-          {(healthTeamCtx.teamTypes.length !== 0) ? teamTypesList : <p>No Team Types</p>}
+          {healthTeamCtx.teamTypes.length !== 0 ? (
+            teamTypesList
+          ) : (
+            <p>No Team Types</p>
+          )}
         </Toast.Body>
       </Toast>
 

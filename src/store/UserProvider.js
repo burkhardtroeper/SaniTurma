@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useContext } from "react";
 import UserContext from "./user-context";
 // import DiseasesContext from "../store/diseases-context";
 import HealthTeamContext from "./healthteam-context";
@@ -10,39 +10,64 @@ const defaultUserState = {
     appointments: [],
 };
 
+let healthTeamCtx = null;
+
 const userReducer = (state, action) => {
     
     if (action.type === 'SELECTDISEASE') {
         console.log('in UserProvider, userReducer');
         const updatedDisease = action.disease;
         return {
-            diseaseSelected: updatedDisease
+            diseaseSelected: updatedDisease,
+            team: state.team,
+            notes: state.notes,
+            appointments: state.appointments
         }
     }
 
     if (action.type === 'ADDTEAMMEMBER') {
 
-        const newTeamMember = HealthTeamContext.healthWorkers.map(healthWorker => {
+        console.log('in UserProvider, userReducer, ADDTEAMMEMBER');
+        const newTeamMember = healthTeamCtx.healthWorkers.filter(healthWorker => {
 
             return healthWorker.id === action.id;
 
         });   
 
-        return {
-            diseaseSelected: state.diseaseSelected,
-            team: [...state.team, newTeamMember],
-            notes: state.notes,
-            appointments: state.appointments
-        }
+        const checkTeamMember = state.team.filter((teamMember) => {
 
+             return teamMember[0].id === newTeamMember[0].id;
+
+        });
+
+        if (checkTeamMember.length === 0) {
+
+            return {
+                diseaseSelected: state.diseaseSelected,
+                team: [...state.team, newTeamMember],
+                notes: state.notes,
+                appointments: state.appointments
+            }
+
+        } else {
+
+            return {
+                diseaseSelected: state.diseaseSelected,
+                team: state.team,
+                notes: state.notes,
+                appointments: state.appointments
+            }
+
+        }
 
     }
 
     if (action.type === 'REMOVETEAMMEMBER') {
 
+        console.log('in UserProvider, userReducer, REMOVETEAMMEMBER');
         const toRemoveTeamMemberIndex = state.team.findIndex(teamMember => {
 
-            return teamMember.id === action.id;
+            return teamMember[0].id === action.id;
 
         });
 
@@ -121,6 +146,8 @@ const userReducer = (state, action) => {
 };
 
 const UserProvider = (props) => {
+    
+    healthTeamCtx = useContext(HealthTeamContext);
     
     const [userState, dispatchUserAction] = useReducer(userReducer, defaultUserState);
 

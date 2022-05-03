@@ -53,7 +53,7 @@
 .map-page-toast {
   position: fixed;
   left: 50%;
-  top: 87%;
+  top: 83%;
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
