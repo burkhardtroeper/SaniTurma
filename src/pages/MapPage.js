@@ -40,8 +40,18 @@ const MapPage = () => {
     console.log('Add Teammember with id ... ' + id);
     userCtx.addTeamMember(id);
     console.log(userCtx.team);
+    healthTeamCtx.getTeamByDisease(disease);
+    setHealthTeam(healthTeamCtx.healthWorkers);
 
   };
+
+  const deleteTeamMember = (id) => {
+    console.log(userCtx.team);
+    userCtx.removeTeamMember(id);
+    console.log(userCtx.team);
+    healthTeamCtx.getTeamByDisease(disease);
+    setHealthTeam(healthTeamCtx.healthWorkers);
+  }
 
 
   const memberPopup = (
@@ -54,7 +64,8 @@ const MapPage = () => {
             <br />
             {teamMember.specialist}
             <br />
-            <Button onClick={() => addTeamMember(teamMember.id)}>Auswählen</Button>
+            <Button disabled={teamMember.selected} onClick={() => addTeamMember(teamMember.id)}>Auswählen</Button>
+            <Button disabled={!teamMember.selected} onClick={() => deleteTeamMember(teamMember.id)}>Löschen</Button>
           </Popup>
         </Marker>
       ))}

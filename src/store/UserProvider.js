@@ -65,21 +65,34 @@ const userReducer = (state, action) => {
     if (action.type === 'REMOVETEAMMEMBER') {
 
         console.log('in UserProvider, userReducer, REMOVETEAMMEMBER');
+
         const toRemoveTeamMemberIndex = state.team.findIndex(teamMember => {
 
             return teamMember[0].id === action.id;
 
         });
 
-        const updatedTeamMembers = state.team.slice(0, toRemoveTeamMemberIndex).concat(state.team.slice(toRemoveTeamMemberIndex + 1));
+        if (toRemoveTeamMemberIndex !== -1) {
 
-        return {
-            diseaseSelected: state.diseaseSelected,
-            team: updatedTeamMembers,
-            notes: state.notes,
-            appointments: state.appointments
+            const updatedTeamMembers = state.team.slice(0, toRemoveTeamMemberIndex).concat(state.team.slice(toRemoveTeamMemberIndex + 1));
+
+            return {
+                diseaseSelected: state.diseaseSelected,
+                team: updatedTeamMembers,
+                notes: state.notes,
+                appointments: state.appointments
+            }
+
+        } else {
+
+            return {
+                diseaseSelected: state.diseaseSelected,
+                team: state.team,
+                notes: state.notes,
+                appointments: state.appointments
+            }
+
         }
-
 
     }
 
@@ -160,8 +173,8 @@ const UserProvider = (props) => {
         dispatchUserAction({type: 'ADDTEAMMEMBER', id: id});
     }
 
-    const removeTeamMemberHandler = (number) => {
-        dispatchUserAction({type: 'REMOVETEAMMEMBER', number: number});
+    const removeTeamMemberHandler = (id) => {
+        dispatchUserAction({type: 'REMOVETEAMMEMBER', id: id});
     }
 
     const addNoteHandler = (note) => {

@@ -1,6 +1,7 @@
-import { useReducer } from "react";
+import { useReducer, useContext } from "react";
 
 import HealthTeamContext from "./healthteam-context";
+import UserContext from "../store/user-context";
 
 const healthWorkers = [
 
@@ -18,6 +19,7 @@ const healthWorkers = [
         website: 'www.info.de',
         lat: 50.680108,
         lng: 10.387152,
+        selected: false,
     },
     {
         id: 1,
@@ -33,6 +35,7 @@ const healthWorkers = [
         website: 'www.huber.de',
         lat: 51.680108,
         lng: 9.387152,
+        selected: false,
     },
     {
         id: 2,
@@ -48,9 +51,12 @@ const healthWorkers = [
         website: 'www.auge.de',
         lat: 49.680108,
         lng: 11.387152,
+        selected: false,
     }
 
 ]; 
+
+let userCtx = null;
 
 const defaultHealthTeamState = {
     healthWorkers: [],
@@ -62,8 +68,22 @@ const healthTeamReducer = (state, action) => {
     if (action.type === 'GETTEAMBYDISEASE') {
         console.log('in HealthTeamProvider, getTeamByDisease');
         console.log('Disease: ' + action.disease);
+
+        console.log(userCtx);
         
         const updatedHealthWorkers = healthWorkers.filter(healthWorker => healthWorker.diseases.includes(action.disease));
+
+        const markSelectedHealthWorkers = updatedHealthWorkers.map((healthWorker) => {
+
+            if (userCtx.team.includes(healthWorker.specialist)) {
+                healthWorker.selected = true;
+            }
+
+            return healthWorker;
+
+        });
+
+        console.log('Mark selected list: ' + JSON.stringify(markSelectedHealthWorkers));
 
         console.log(updatedHealthWorkers);
 
@@ -100,6 +120,8 @@ const healthTeamReducer = (state, action) => {
 
 const HealthTeamProvider = (props) => {
 
+    userCtx = useContext(UserContext);
+    
     const [healthTeamState, dispatchHealthTeamAction] = useReducer(healthTeamReducer, defaultHealthTeamState);
 
     const getTeamByDiseaseHandler = (disease) => {
